@@ -1,16 +1,36 @@
-from typing import Union
+from typing import Union, List, Annotated
+from pydantic import BaseModel
+from fastapi import FastAPI, Depends
 
-from fastapi import FastAPI
+from app.connection.database import engine,sessionLocal
+from sqlalchemy.orm import Session
+
+
+
 
 app = FastAPI()
 
+def get_db():
+    db = sessionLocal()
+    try: 
+        yield db
+    finally:
+        db.close()
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+db_dependancy = Annotated[Session, Depends(get_db)]
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-    
+
+
+# @app.post("/questions/")
+
+
+# async def create_questions(question: QuestionBase, db: db_dependancy):
+#     db_question = models.Questions(question_text=question.question_text)
+#     db.add(db_question)
+#     for choices in question.choices:
+#         db_choice = models.Choices(choice_text=choice.choice_text, is_correct=choice.is_correct, question_id=db_question.id)
+#         db.add(db_choices)
+
+#     db.commit()
+

@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends
 
 from app.connection.database import engine,sessionLocal
 from sqlalchemy.orm import Session
-
+from schemas.propertySchema import PropertyCreate, PropertyBase
 
 
 
@@ -34,3 +34,7 @@ db_dependancy = Annotated[Session, Depends(get_db)]
 
 #     db.commit()
 
+@app.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
+def create_new_property(property: PropertyBase, db: Session = Depends(get_db)):
+    return create_new_property(db,property)
+    

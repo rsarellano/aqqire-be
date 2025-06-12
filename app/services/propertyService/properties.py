@@ -13,3 +13,4 @@ def create_property (db:Session, data: PropertyBase ):
     db.commit()
     db.refresh(new_property)
     return new_property
+

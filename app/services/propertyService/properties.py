@@ -8,4 +8,8 @@ def get_all_properties(db: Session ):
 
 
 def create_property (db:Session, data: PropertyBase ):
-    new_property = Property
+    new_property = Property(**data.dict())
+    db.add(new_property)
+    db.commit()
+    db.refresh(new_property)
+    return new_property

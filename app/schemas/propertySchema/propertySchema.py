@@ -8,3 +8,10 @@ class PropertyBase(BaseModel):
     property_type: str
     property_price: int
 
+class PropertyCreate(PropertyBase):
+    id: int
+
+
+    class config:
+        orm_mode =True
+        from_attribute = True

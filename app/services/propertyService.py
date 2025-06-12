@@ -1,6 +1,6 @@
-from models.properties.properties import Property
+from app.models.properties import Property
 from sqlalchemy.orm import Session
-from schemas.propertySchema import PropertyBase
+from app.schemas.propertySchema import PropertyBase
 
 
 def get_all_properties(db: Session ):
@@ -8,7 +8,7 @@ def get_all_properties(db: Session ):
 
 
 def create_property (db:Session, data: PropertyBase ):
-    new_property = Property(**data.dict())
+    new_property = Property(**data.model_dump())
     db.add(new_property)
     db.commit()
     db.refresh(new_property)

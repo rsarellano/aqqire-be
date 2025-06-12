@@ -1,11 +1,15 @@
 from typing import Union, List, Annotated
 from pydantic import BaseModel
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, status
 
-from app.connection.database import engine,sessionLocal
+from app.services.propertyService import get_all_properties, create_property
+
+from app.connection.database import engine,sessionLocal, Base
 from sqlalchemy.orm import Session
-from schemas.propertySchema import PropertyCreate, PropertyBase
+from app.schemas.propertySchema import PropertyCreate, PropertyBase
+from app.models.properties import Property
 
+Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI()
@@ -21,20 +25,7 @@ db_dependancy = Annotated[Session, Depends(get_db)]
 
 
 
-
-# @app.post("/questions/")
-
-
-# async def create_questions(question: QuestionBase, db: db_dependancy):
-#     db_question = models.Questions(question_text=question.question_text)
-#     db.add(db_question)
-#     for choices in question.choices:
-#         db_choice = models.Choices(choice_text=choice.choice_text, is_correct=choice.is_correct, question_id=db_question.id)
-#         db.add(db_choices)
-
-#     db.commit()
-
 @app.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
 def create_new_property(property: PropertyBase, db: Session = Depends(get_db)):
-    return create_new_property(db,property)
+    return create_property(db,property)
     

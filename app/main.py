@@ -20,11 +20,11 @@ def get_db():
     finally:
         db.close()
 
-db_dependancy = Annotated[Session, Depends(get_db)]
+# db_dependancy = Annotated[Session, Depends(get_db)]
 
 
 
-@app.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
-def create_new_property(property: PropertyBase, db: Session = Depends(get_db)):
-    return create_property(db,property)
+# @app.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
+# def create_new_property(property: PropertyBase, db: Session = Depends(get_db)):
+#     return create_property(db,property)
     

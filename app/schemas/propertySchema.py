@@ -10,7 +10,7 @@ class PropertyBase(BaseModel):
 
 class PropertyCreate(PropertyBase):
     id: int
-
+ 
 
     class config:
         orm_mode =True

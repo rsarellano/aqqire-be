@@ -30,8 +30,13 @@ def search_property(db: Session, q: str | None , page: int, items: int):
     if q:
         searched_property = searched_property.filter(
             or_( 
-                Property.property_name.ilike("f%{q}%"),
-                Property.property_address.ilike("f%{q}%"),
-                Property.property_
+                Property.name.ilike(f"%{q}%"),
+                Property.address.ilike(f"%{q}%"),
+                Property.state.ilike(f"%{q}%"),
+                Property.city.ilike(f"%{q}")
             )
         )
+    total = search_property.count()
+    results = search_property.offset((page - 1 ) * items).limit(items).all
+
+    returns result, total

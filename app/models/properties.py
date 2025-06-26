@@ -5,11 +5,12 @@ class Property(Base):
     __tablename__ = "properties"
 
     id = Column(Integer,primary_key=True,index=True)
-    property_name = Column(String, index=True, nullable=False)
-    property_state = Column(String, index=True, nullable=False)
-    property_city = Column(String, index=True, nullable=False)
-    property_type = Column(String, index=True, nullable=False)
-    property_price = Column(Integer, index=True, nullable=False)
+    name = Column(String, index=True, nullable=False)
+    state = Column(String, index=True, nullable=False)
+    city = Column(String, index=True, nullable=False)
+    type = Column(String, index=True, nullable=False)
+    price = Column(Integer, index=True, nullable=False)
+    address = Column(String, index=True, nullable=False)
 
     
 

@@ -2,6 +2,7 @@ from app.models.properties import Property
 from sqlalchemy.orm import Session
 from app.schemas.propertySchema import PropertyBase
 from typing import List
+from sqlalchemy import or_
 
 
 def get_all_properties(db: Session ):
@@ -36,7 +37,7 @@ def search_property(db: Session, q: str | None , page: int, items: int):
                 Property.city.ilike(f"%{q}")
             )
         )
-    total = search_property.count()
-    results = search_property.offset((page - 1 ) * items).limit(items).all
+    total = searched_property.count()
+    results = search_property.offset((page - 1 ) * items).limit(items).all()
 
-    returns result, total
+    return result, total

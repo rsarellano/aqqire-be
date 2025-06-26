@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends, status, FastAPI
-from typing import Annotated, List
+from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, Query
+from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
 
 
 from app.schemas.propertySchema import PropertyBase, PropertyCreate
-from app.services.propertyService import get_all_properties, create_property, create_properties
+from app.services.propertyService import search_property, get_all_properties, create_property, create_properties
 
 
 from app.connection.database import get_db
@@ -35,4 +35,13 @@ def create_new_properties(properties: List[PropertyBase], db: Session = Depends(
 def list_properties(db: db_dependency):
     return get_all_properties(db)
 
-# @router.post("search/", )
+@router.post("/search/")
+def search_properties(q: str = Query(default=None) ,page: int = Query(default=1,ge=1),items: int = Query(default=10, ge=1), db: Session = Depends(get_db)):
+    results, total = search_property(db,q,page,items)
+
+    return {
+        "data": [PropertyResponse.from_orm(r) for r in results],
+        "total": total,
+        "page": page,
+        "items": items
+    }

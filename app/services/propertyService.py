@@ -25,6 +25,18 @@ def create_properties(db: Session, data: List[PropertyCreate] ):
     return new_properties
 
 
+def update_property(db: Session,property_id: int , data: PropertyCreate):
+    updated_property = db.query(Property).filter(Property.id == property_id).first()
+    if not updated_property:
+        return None
+
+    for field, value in data.model_dump().items():
+        setattr(updated_property, field, value)
+
+    db.commit()
+    db.refresh(updated_property)
+    return updated_property
+
 def search_property(db: Session, q: str | None , page: int, items: int):
     query_property = db.query(Property)
 

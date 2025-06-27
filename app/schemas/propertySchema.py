@@ -1,7 +1,7 @@
 
 from pydantic import BaseModel
 
-class PropertyBase(BaseModel):
+class PropertyCreate(BaseModel):
     name: str
     city: str
     state: str
@@ -9,10 +9,10 @@ class PropertyBase(BaseModel):
     price: int
     address: str
 
-class PropertyCreate(PropertyBase):
+class PropertyResponse(PropertyCreate):
     id: int
  
 
-    class config:
+    class Config:
         orm_mode =True
-        from_attribute = True
+        from_attributes = True

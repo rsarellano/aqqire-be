@@ -3,7 +3,7 @@ from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
 
 
-from app.schemas.propertySchema import PropertyBase, PropertyCreate
+from app.schemas.propertySchema import PropertyResponse, PropertyCreate
 from app.services.propertyService import search_property, get_all_properties, create_property, create_properties
 
 
@@ -23,11 +23,11 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 
 @router.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
-def create_new_property(property: PropertyBase, db: Session = Depends(get_db)):
+def create_new_property(property: PropertyCreate, db: Session = Depends(get_db)):
     return create_property(db,property)
     
 @router.post("/bulk", response_model=List[PropertyCreate], status_code=status.HTTP_201_CREATED)
-def create_new_properties(properties: List[PropertyBase], db: Session = Depends(get_db)):
+def create_new_properties(properties: List[PropertyCreate], db: Session = Depends(get_db)):
     return create_properties(db,properties)
     
 

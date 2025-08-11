@@ -2,6 +2,8 @@ from typing import Union, List, Annotated
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends, status
 from app.connection.database import engine,sessionLocal, Base
+from fastapi import FastAPI, Depends, status
+from app.connection.database import engine,sessionLocal, Base
 from sqlalchemy.orm import Session
 
 from app.schemas.property.propertySchema import PropertyCreate, PropertyResponse

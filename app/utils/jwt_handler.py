@@ -2,7 +2,7 @@ import jwt
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 
-SECRET_KEY = ""
+# SECRET_KEY = ""
 ALGORITHM = "HS256"
 
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=30)):

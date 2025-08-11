@@ -3,9 +3,10 @@ from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
 
 
-from app.schemas.propertySchema import PropertyResponse, PropertyCreate
-from app.services.propertyService import update_property, search_property, get_all_properties, create_property, create_properties
-
+from app.schemas.property.propertySchemaAI import SearchPrompt
+from app.schemas.property.propertySchema import PropertyResponse, PropertyCreate
+from app.services.propertyService import update_property, search_property, get_all_properties, create_property, create_properties, search_properties_with_ai
+from app.models.properties import Property
 
 from app.connection.database import get_db
 
@@ -34,10 +35,11 @@ def create_new_properties(properties: List[PropertyCreate], db: Session = Depend
 #  Get All Properties
 @router.get("/", response_model=list[PropertyCreate])
 def list_properties(db: db_dependency):
-    return get_all_properties(db)
+    return get_alerties
 
-# Search for properties
-@router.post("/search/")
+# @router.post("/sel_properties(db)
+
+# Search for proparch/")
 def search_properties(q: str = Query(default=None) ,page: int = Query(default=1,ge=1),items: int = Query(default=10, ge=1), db: Session = Depends(get_db)):
     results, total = search_property(db,q,page,items)
 
@@ -60,3 +62,56 @@ def update_exisiting_property(
     if not updated:
          raise HTTPException(status_code=404, detail="Property not found")
     return updated
+
+
+
+
+# @router.patch("/properties/{property_id}/status")
+# def set_property_status(
+#     property_id: int,
+#     status_update: PropertyCreate,
+#     db: Session = Depends(get_db)
+# ):
+#     updated = update_property_status(db, property_id, status_update.status)
+#     if not updated:
+#         raise HTTPException(status_code=404, detail="Property not found")
+#     return updated
+
+
+
+
+# AI search
+
+# @router.post("/search-ai")
+# def search_ai_with_gpt(request: SearchPrompt, db: Session = Depends(get_db)):
+#     matching_ids = search_properties_with_ai(request.prompt, db)
+
+#     result = db.query(Property).filter(Property.id.in_(matching_ids)).all()
+#     return {"ids": matching_ids}
+
+
+
+@router.post("/search-ai")
+def search_ai_with_gpt(request: SearchPrompt, db: Session = Depends(get_db)):
+    matching_ids = search_properties_with_ai(request.prompt, db)
+
+    if not matching_ids:
+        return {"properties": []}
+
+    # Query full property data
+    results = db.query(Property).filter(Property.id.in_(matching_ids)).all()
+
+    # Return as JSON (manually or using a response model)
+    property_data = [
+        {
+            "id": p.id,
+            "name": p.name,
+            "city": p.city,
+            "state": p.state,
+            "address": p.address,
+            "price": p.price,
+        }
+        for p in results
+    ]
+
+    return {"properties": property_data}

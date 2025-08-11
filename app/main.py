@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends, status
 from app.connection.database import engine,sessionLocal, Base
 from sqlalchemy.orm import Session
 
-from app.schemas.propertySchema import PropertyCreate, PropertyResponse
+from app.schemas.property.propertySchema import PropertyCreate, PropertyResponse
 from app.models.properties import Property
 from app.services.propertyService import get_all_properties, create_property
 from app.controllers.propertiesController import router as property_router

@@ -1,4 +1,4 @@
-from sqlalchemy import Colum, Integer, Boolean, String, ForeignKey
+from sqlalchemy import Column, Integer, Boolean, String, ForeignKey
 from app.connection.database import Base
 
 class Users(Base):

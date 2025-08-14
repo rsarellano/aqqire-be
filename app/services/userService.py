@@ -19,9 +19,9 @@ def get_user_by_email(db: Session, email:str):
     return db.query(Users).filter(Users.user_email == email).first()
 
 
-def login(db: Session,data:UserLogin ):
+def user_login(db: Session,data:UserLogin ):
     user = get_user_by_email(db,data.user_email)
-    if not user or not bcrypt.checkpw(data.user_passwrd.encode("utf-8"), user.user_password.encode("utf-8")):
+    if not user or not bcrypt.checkpw(data.user_passwrd.encode("utf-8"), user.user_passwrd.encode("utf-8")):
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
 

@@ -8,6 +8,8 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi import HTTPException
 
 
+
+
 def get_all_users(db:Session):
     return db.query(User).all()
 

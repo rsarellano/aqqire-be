@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from fastapi import APIRouter, HTTPException, Depends, status, FastAPI
 from typing import Annotated
 from sqlalchemy.orm import Session
@@ -21,11 +20,3 @@ def register(data: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login")
 def login(data: UserLogin, db: Session = Depends(get_db)):
     return user_login(db,data)
-=======
-fromn fastapi import APIRouter, HTTPException, Depends, status, fastapi
-from typing import Annotated
-from sqlalchemy.orm import Session
-
-from app.schemas.userSchema import UserBase
-from app.services.userService import 
->>>>>>> 4e21ccd0929ee65cc1a8d85b91719599453d8b06

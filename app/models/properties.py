@@ -6,9 +6,8 @@ class Property(Base):
 
     id = Column(Integer,primary_key=True,index=True)
     name = Column(String, index=True, nullable=False)
-<<<<<<< HEAD
     type = Column(String, index=True, nullable=False)
-    price = Column(Integer, index=True, nullable=False)
+    price = Column(Integer, index=True, nullable=True)
     # status = Column(String, index=True, nullable=False)
 
     # # location
@@ -40,13 +39,4 @@ class Property(Base):
     # occupancy = Column(String, index=True, nullable=False)
     # grossRentalIncome = Column(String, index=True, nullable=False)
     # netRentalIncome = Column(String, index=True, nullable=False)
-=======
-    state = Column(String, index=True, nullable=False)
-    city = Column(String, index=True, nullable=False)
-    type = Column(String, index=True, nullable=False)
-    price = Column(Integer, index=True, nullable=False)
-    address = Column(String, index=True, nullable=False)
-
-    
->>>>>>> 4e21ccd0929ee65cc1a8d85b91719599453d8b06
 

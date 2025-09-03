@@ -11,7 +11,7 @@ class UserCreate(UserBase):
     user_passwrd: str
 
 class UserLogin(BaseModel):
-    user_email: EmailStr
+    user_email: str
     user_passwrd: str
 
 class UserResponse(UserBase):

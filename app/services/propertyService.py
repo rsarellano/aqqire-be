@@ -66,7 +66,7 @@ def search_property(db: Session, q: str | None , page: int, items: int):
                 Property.name.ilike(f"%{q}%"),
                 Property.address.ilike(f"%{q}%"),
                 Property.state.ilike(f"%{q}%"),
-                Property.city.ilike(f"%{q}"),
+                Property.city.ilike(f"%{q}%"),
                 Property.status.ilike(f"%{q}%"),
                 # Property.minPrice.ilike(f"%{q}%"),
                 # Property.maxPrice.ilike(f"%{q}%")

@@ -16,8 +16,6 @@ from app.controllers.usersController import router as user_router
 from fastapi.middleware.cors import CORSMiddleware 
 from passlib.context import CryptContext
 
-Base.metadata.create_all(bind=engine)
-
 
 
 app = FastAPI()

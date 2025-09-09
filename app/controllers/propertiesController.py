@@ -35,7 +35,7 @@ def create_new_properties(properties: List[PropertyCreate], db: Session = Depend
 #  Get All Properties
 @router.get("/", response_model=list[PropertyCreate])
 def list_properties(db: db_dependency):
-    return get_alerties
+    return get_all_properties(db)
 
 # @router.post("/sel_properties(db)
 

@@ -1,5 +1,6 @@
 from app.models.properties import Property
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.property.propertySchema import PropertyCreate
 from typing import List
 from langchain.prompts import PromptTemplate
@@ -14,7 +15,7 @@ import json
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
-def get_all_properties(db: Session ):
+def get_all_properties(db: AsyncSession ):
     return db.query(Property).all()
 
 

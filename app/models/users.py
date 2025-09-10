@@ -9,5 +9,5 @@ class Users(Base):
     user_firstName = Column( String, index=True, nullable=False)
     user_lastName = Column (String, index=True, nullable=False)
     user_passwrd = Column(String, index=True, nullable=False)
-    user_subscription = Column(String, index=True, nullable=False)
+    # user_subscription = Column(String, index=True, nullable=False)
     

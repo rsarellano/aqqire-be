@@ -6,7 +6,7 @@ class PropertyCreate(BaseModel):
     city: str
     state: str
     type: str
-    # price: int
+    price: int
     address: str
     # status: str
 

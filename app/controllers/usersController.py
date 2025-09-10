@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status, FastAPI
 from typing import Annotated
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.user.userSchema import UserBase, UserResponse, UserCreate, UserLogin
 from app.services.userService import register_user, user_login
@@ -12,8 +13,8 @@ router = APIRouter(
 )
 
 @router.post("/register", response_model=UserResponse)
-def register(data: UserCreate, db: Session = Depends(get_db)):
-    return register_user(db,data)
+async def register(data: UserCreate, db: AsyncSession = Depends(get_db)):
+    return await register_user(db,data)
 
 
 

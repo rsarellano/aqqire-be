@@ -1,8 +1,9 @@
 from app.models.users import Users
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from app.schemas.user.userSchema import UserBase,UserCreate,UserLogin
 from app.utils.jwt_handler import create_access_token
-
+from sqlalchemy.ext.asyncio import AsyncSession
 import bcrypt
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi import HTTPException
@@ -14,12 +15,16 @@ def get_all_users(db:Session):
     return db.query(User).all()
 
 
-def create_user(db:Session, data: UserBase):
+async def create_user(db:AsyncSession, data: UserBase):
     new_user = User()
 
-def get_user_by_email(db: Session, email:str):
-    return db.query(Users).filter(Users.user_email == email).first()
-
+# async def get_user_by_email(db: AsyncSession, email:str):
+#     return await db.query(Users).filter(Users.user_email == email).first()
+async def get_user_by_email(db: AsyncSession, email: str):
+    result = await db.execute(
+        select(Users).where(Users.user_email == email)
+    )
+    return result.scalars().first()
 
 def user_login(db: Session,data:UserLogin ):
     user = get_user_by_email(db,data.user_email)
@@ -30,8 +35,8 @@ def user_login(db: Session,data:UserLogin ):
     token = create_access_token({"sub": str(user.id)})
     return {"access_token": token, "token_type": "bearer"}
 
-def register_user(db: Session, data: UserCreate):
-    existing_user = get_user_by_email(db,data.user_email)
+async def register_user(db: AsyncSession, data: UserCreate):
+    existing_user = await get_user_by_email(db,data.user_email)
     if existing_user:
         raise HTTPException(status_code=400, detail="User already exists")
 
@@ -46,7 +51,7 @@ def register_user(db: Session, data: UserCreate):
 
 
     db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    await db.commit()
+    await db.refresh(new_user)
 
     return new_user

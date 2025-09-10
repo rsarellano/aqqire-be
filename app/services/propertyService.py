@@ -5,6 +5,7 @@ from app.schemas.property.propertySchema import PropertyCreate
 from typing import List
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
+from sqlalchemy import select
 
 
 from langchain_openai import ChatOpenAI
@@ -15,15 +16,16 @@ import json
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
-def get_all_properties(db: AsyncSession ):
-    return db.query(Property).all()
+async def get_all_properties(db: AsyncSession ):
+    result = await db.execute(select(Property))
+    return result.scalars().all()
 
 
-def create_property (db:Session, data: PropertyCreate ):
+async def create_property (db:AsyncSession, data: PropertyCreate ):
     new_property = Property(**data.model_dump())
     db.add(new_property)
-    db.commit()
-    db.refresh(new_property)
+    await db.commit()
+    await db.refresh(new_property)
     return new_property
 
 def create_properties(db: Session, data: List[PropertyCreate] ):

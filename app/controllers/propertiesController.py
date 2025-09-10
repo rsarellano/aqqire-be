@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, Query
 from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
-
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.property.propertySchemaAI import SearchPrompt
 from app.schemas.property.propertySchema import PropertyResponse, PropertyCreate
@@ -24,8 +24,8 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 # Creating single property
 @router.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
-def create_new_property(property: PropertyCreate, db: Session = Depends(get_db)):
-    return create_property(db,property)
+async def create_new_property(property: PropertyCreate, db: AsyncSession = Depends(get_db)):
+    return await create_property(db,property)
     
 #  Create Multiple Properties
 @router.post("/bulk", response_model=List[PropertyCreate], status_code=status.HTTP_201_CREATED)
@@ -34,8 +34,8 @@ def create_new_properties(properties: List[PropertyCreate], db: Session = Depend
     
 #  Get All Properties
 @router.get("/", response_model=list[PropertyCreate])
-def list_properties(db: db_dependency):
-    return get_all_properties(db)
+async def list_properties(db: db_dependency):
+    return await get_all_properties(db)
 
 # @router.post("/sel_properties(db)
 

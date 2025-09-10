@@ -45,8 +45,10 @@ async def register_user(db: AsyncSession, data: UserCreate):
     new_user = Users(
         user_email = data.user_email,
         user_firstName = data.user_firstName,
+        user_mobileNumber = data.user_mobileNumber,
         user_lastName = data.user_lastName,
         user_passwrd =hashed_pw
+        
     )
 
 

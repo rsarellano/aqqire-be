@@ -4,7 +4,7 @@ class UserBase(BaseModel):
     user_email: str
     user_firstName: str
     user_lastName: str
-    
+    user_mobileNumber: str
 
 class UserCreate(UserBase):
    
@@ -19,4 +19,4 @@ class UserResponse(UserBase):
 
     class config:
         orm_mode=True
-        from_attribute = True
+        from_attributes = True

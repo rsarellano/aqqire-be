@@ -19,5 +19,5 @@ async def register(data: UserCreate, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/login")
-def login(data: UserLogin, db: Session = Depends(get_db)):
-    return user_login(db,data)
+async def login(data: UserLogin, db: AsyncSession = Depends(get_db)):
+    return await user_login(db,data)

@@ -26,9 +26,10 @@ async def get_user_by_email(db: AsyncSession, email: str):
     )
     return result.scalars().first()
 
-def user_login(db: Session,data:UserLogin ):
-    user = get_user_by_email(db,data.user_email)
-    if not user or not bcrypt.checkpw(data.user_passwrd.encode("utf-8"), user.user_passwrd.encode("utf-8")):
+async def user_login(db: AsyncSession,data:UserLogin ):
+    user = await get_user_by_email(db,data.user_email)
+    if not user or not bcrypt.checkpw(data.user_passwrd.encode("utf-8"),
+     user.user_passwrd.encode("utf-8")):
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
 

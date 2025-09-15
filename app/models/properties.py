@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Boolean,String, ForeignKey
 from app.connection.database import Base
+from sqlalchemy.orm import relationship
 
 class Property(Base):
     __tablename__ = "properties"
@@ -40,3 +41,8 @@ class Property(Base):
     # grossRentalIncome = Column(String, index=True, nullable=False)
     # netRentalIncome = Column(String, index=True, nullable=False)
 
+
+
+    owner_id = Column(String, ForeignKey("users.id"))
+
+    owner = relationship("Users", back_populates="properties")

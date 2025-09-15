@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, Boolean, String, ForeignKey
 from app.connection.database import Base
+from sqlalchemy.orm import relationship
 
 class Users(Base):
     __tablename__ = "users"
@@ -12,3 +13,4 @@ class Users(Base):
     user_mobileNumber = Column(String, index=True, nullable=True)
     # user_subscription = Column(String, index=True, nullable=False)
     
+    properties = relationship("Property", back_populates="owner")

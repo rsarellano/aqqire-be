@@ -43,6 +43,7 @@ class Property(Base):
 
 
 
-    owner_id = Column(String, ForeignKey("users.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("Users", back_populates="properties")
+    

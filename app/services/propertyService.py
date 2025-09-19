@@ -1,4 +1,5 @@
 from app.models.properties import Property
+from fastapi import Depends
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.property.propertySchema import PropertyCreate
@@ -6,12 +7,17 @@ from typing import List
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 from sqlalchemy import select
+from fastapi.security import OAuth2PasswordBearer
 
 
 from langchain_openai import ChatOpenAI
 import os
 import re
 import json
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
 
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
@@ -22,7 +28,11 @@ async def get_all_properties(db: AsyncSession ):
 
 
 async def create_property (db:AsyncSession, data: PropertyCreate ):
-    new_property = Property(**data.model_dump())
+    
+    property_data = data.model_dump()
+    property_data["owner_id"] = current_user.id
+    
+    new_property = Property(**property_data)
     db.add(new_property)
     await db.commit()
     await db.refresh(new_property)
@@ -48,6 +58,15 @@ def update_property(db: Session,property_id: int , data: PropertyCreate):
     db.commit()
     db.refresh(updated_property)
     return updated_property
+
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = verify_access_token(token)
+    user_id: str = payload.get("sub")
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    return user_id
 
 # Updating status of property
 # def update_property_status(db: Session, property_id: int, status: str):

@@ -40,7 +40,7 @@ async def list_properties(db: db_dependency):
 # @router.post("/sel_properties(db)
 
 
-# Search for proparch/")
+# Search for properties/")
 def search_properties(q: str = Query(default=None) ,page: int = Query(default=1,ge=1),items: int = Query(default=10, ge=1), db: Session = Depends(get_db)):
     results, total = search_property(db,q,page,items)
 

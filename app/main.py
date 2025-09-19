@@ -40,8 +40,8 @@ app.include_router(user_router)
 
 app.include_router(property_router)
 
-@app.on_event("startup")
-async def startup_event():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    print("Tables ensured on startup")
+# @app.on_event("startup")
+# async def startup_event():
+#     async with engine.begin() as conn:
+#         await conn.run_sync(Base.metadata.create_all)
+#     print("Tables ensured on startup")

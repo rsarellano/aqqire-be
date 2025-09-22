@@ -8,6 +8,7 @@ class PropertyCreate(BaseModel):
     type: str
     price: int
     address: str
+    # owner_id: str
     # status: str
 
 class PropertyResponse(PropertyCreate):

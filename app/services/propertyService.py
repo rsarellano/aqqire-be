@@ -7,7 +7,9 @@ from typing import List
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 from sqlalchemy import select
+from app.connection.database import get_db
 from fastapi.security import OAuth2PasswordBearer
+from app.models.users import Users
 
 
 from langchain_openai import ChatOpenAI
@@ -27,7 +29,7 @@ async def get_all_properties(db: AsyncSession ):
     return result.scalars().all()
 
 
-async def create_property (db:AsyncSession, data: PropertyCreate ):
+async def create_property (db:AsyncSession, data: PropertyCreate, current_user: Users ):
     
     property_data = data.model_dump()
     property_data["owner_id"] = current_user.id
@@ -61,13 +63,21 @@ def update_property(db: Session,property_id: int , data: PropertyCreate):
 
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db)):
     payload = verify_access_token(token)
     user_id: str = payload.get("sub")
     if user_id is None:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    return user_id
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    
 
+    user = await db.get(Users, int(user_id))
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            details="User not found"
+        )
+    return user
 # Updating status of property
 # def update_property_status(db: Session, property_id: int, status: str):
 #     updated_property = db.query(Property).filter(Property.id == property_id).first()

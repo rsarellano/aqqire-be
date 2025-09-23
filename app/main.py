@@ -15,10 +15,42 @@ from app.controllers.usersController import router as user_router
 from fastapi.middleware.cors import CORSMiddleware 
 from passlib.context import CryptContext
 from app.connection.database import Base, engine
+from fastapi.security import OAuth2PasswordBearer
 import asyncio
-
+from fastapi.openapi.utils import get_openapi
 
 app = FastAPI()
+
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Aqqire API",
+        version="1.0.0",
+        description="Property management API",
+        routes=app.routes,
+    )
+    openapi_schema["components"]["securitySchemes"] = {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    }
+    openapi_schema["security"] = [{"BearerAuth": []}]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
+
+@app.middleware("http")
+async def log_headers(request, call_next):
+    print("AUTH HEADER RECEIVED:", request.headers.get("authorization"))
+    response = await call_next(request)
+    return response
+
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

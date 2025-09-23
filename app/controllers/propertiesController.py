@@ -6,9 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.property.propertySchemaAI import SearchPrompt
 from app.schemas.property.propertySchema import PropertyResponse, PropertyCreate
 from app.services.propertyService import update_property, search_property, get_all_properties, create_property, create_properties, search_properties_with_ai
+from app.utils.jwt_handler import get_current_user
 from app.models.properties import Property
-
+from app.models.users import Users
+from fastapi.security import OAuth2PasswordBearer
 from app.connection.database import get_db
+
 
 
 router = APIRouter(
@@ -24,8 +27,9 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 # Creating single property
 @router.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
-async def create_new_property(property: PropertyCreate, db: AsyncSession = Depends(get_db)):
-    return await create_property(db,property)
+async def create_new_property(property: PropertyCreate, db: AsyncSession = Depends(get_db),
+current_user: Users = Depends(get_current_user)):
+    return await create_property(db,property, current_user)
     
 #  Create Multiple Properties
 @router.post("/bulk", response_model=List[PropertyCreate], status_code=status.HTTP_201_CREATED)

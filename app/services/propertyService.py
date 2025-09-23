@@ -18,7 +18,7 @@ import re
 import json
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
 
 
 load_dotenv()
@@ -63,21 +63,7 @@ def update_property(db: Session,property_id: int , data: PropertyCreate):
 
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme),
-    db: AsyncSession = Depends(get_db)):
-    payload = verify_access_token(token)
-    user_id: str = payload.get("sub")
-    if user_id is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    
 
-    user = await db.get(Users, int(user_id))
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            details="User not found"
-        )
-    return user
 # Updating status of property
 # def update_property_status(db: Session, property_id: int, status: str):
 #     updated_property = db.query(Property).filter(Property.id == property_id).first()

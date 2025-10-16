@@ -34,7 +34,7 @@ async def user_login(db: AsyncSession,data:UserLogin ):
 
 
     token = create_access_token({"sub": str(user.id)})
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token}
 
 async def register_user(db: AsyncSession, data: UserCreate):
     existing_user = await get_user_by_email(db,data.user_email)

@@ -9,12 +9,18 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-URL_DATABASE = "postgresql+asyncpg://postgres:admin123$@localhost:5432/aqqire"
+URL_DATABASE = "postgresql+asyncpg://postgres:admin123@localhost:5432/aqqire"
+# URL_DATABASE = "postgresql+asyncpg://postgres.zaczkjdqjkjxvkfhxmpo:xDtct56ubp123$@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
 
 
 
-engine = create_async_engine(URL_DATABASE, echo=True)
 
+engine = create_async_engine(
+    URL_DATABASE,
+    echo=True,
+    pool_pre_ping=True,
+    # connect_args={"server_settings": {"statement_cache_size": "0"}}
+)
 sessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession, expire_on_commit=False)
 
 

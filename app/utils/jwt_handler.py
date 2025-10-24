@@ -2,10 +2,11 @@ import jwt
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 import os
-from fastapi import Depends
+from fastapi import Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from app.connection.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+
 
 secret_key = os.getenv("SECRET_KEY")
 
@@ -36,17 +37,33 @@ def verify_access_token(token: str):
         
 
 
-async def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    db: AsyncSession = Depends(get_db)
-):
-    print("TOKEN RECEIVED:", token) 
+# async def get_current_user(request: Request
+#     token: str = Depends(oauth2_scheme),
+#     db: AsyncSession = Depends(get_db)
+# ):
+#     print("TOKEN RECEIVED:", token) 
+#     payload = verify_access_token(token)
+#     user_id: str = payload.get("sub")
+#     if user_id is None:
+#         raise HTTPException(status_code=401, detail="Invalid token")
+
+#     user = await db.get(Users, int(user_id))
+#     if not user:
+#         raise HTTPException(status_code=401, detail="User not found")
+#     return user
+
+async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    
+    if not token:
+        raise HTTPException(status_code=401, detail="No token found")
+    
     payload = verify_access_token(token)
     user_id: str = payload.get("sub")
+    
     if user_id is None:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
+        raise HTTPException(status_code=401, detail="Invalid Token")
+    
     user = await db.get(Users, int(user_id))
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
-    return user

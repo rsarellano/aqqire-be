@@ -10,8 +10,6 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 URL_DATABASE = "postgresql+asyncpg://postgres:admin123@localhost:5432/aqqire"
-# URL_DATABASE = "postgresql+asyncpg://postgres.zaczkjdqjkjxvkfhxmpo:xDtct56ubp123$@aws-1-us-east-2.pooler.supabase.com:6543/postgres"
-
 
 
 

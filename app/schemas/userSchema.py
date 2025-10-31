@@ -8,7 +8,7 @@ class UserBase(BaseModel):
     user_mobileNumber: str | None = None
 
 class UserCreate(UserBase):
-    id: int
+  pass
 
 
     class Config:

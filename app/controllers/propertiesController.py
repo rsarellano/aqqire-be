@@ -84,7 +84,6 @@ def update_exisiting_property(
 
 
 
-
 # AI search
 
 # @router.post("/search-ai")

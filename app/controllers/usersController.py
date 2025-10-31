@@ -66,18 +66,18 @@ async def logout(response: Response):
 @router.get("/auth/me")
 async def get_current_user(request: Request):
     token = request.cookies.get("access_token")
-    print("🍪 COOKIE RECEIVED:", token)
+    print("COOKIE RECEIVED:", token)
 
     if not token:
-        print("🚫 No token found in cookies")
+        print("No token found in cookies")
         return {"authenticated": False}
 
     try:
-        print("🔍 Verifying token...")
+        print("Verifying token...")
         payload = verify_access_token(token)
-        print("✅ TOKEN PAYLOAD:", payload)
+        print("TOKEN PAYLOAD:", payload)
         return {"authenticated": True, "user_id": payload["sub"]}
     except Exception as e:
-        print("❌ TOKEN VERIFICATION FAILED:", e)
+        print("TOKEN VERIFICATION FAILED:", e)
         return {"authenticated": False}
 

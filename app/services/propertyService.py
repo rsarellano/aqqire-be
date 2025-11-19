@@ -17,10 +17,6 @@ import os
 import re
 import json
 
-
-
-
-
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
@@ -106,7 +102,7 @@ def search_properties_with_ai(prompt: str, db: Session):
     properties = db.query(Property).all()
 
     property_list = [{
-        "id": prop.id, "name":prop.name, "city": prop.city, "price": prop.price, "state": prop.state, "address": prop.address,
+        "id": prop.id, "name":prop.name, "city": prop.city, "price": prop.price, "state": prop.satate, "address": prop.address,
     }
     for prop in properties
     ] 
@@ -134,7 +130,7 @@ def search_properties_with_ai(prompt: str, db: Session):
     )
     response = llm.invoke(final_prompt)
 
-    print("LLM response:", response.content)  
+    print("LLM response:", response.content)
     try:
      
         raw_json = re.sub(r"^```(?:json)?\s*|```$", "", response.content.strip(), flags=re.IGNORECASE | re.MULTILINE)
@@ -145,3 +141,11 @@ def search_properties_with_ai(prompt: str, db: Session):
 
 
     return matching_ids
+
+
+
+async def get_user_properties(db: AsyncSession, current_user: Users):
+    result = await db.execute(
+        select(Property).where(Property.owner_id == current_user.id)
+                              )
+    return result.scalars().all()

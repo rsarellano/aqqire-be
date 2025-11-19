@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.property.propertySchemaAI import SearchPrompt
 from app.schemas.property.propertySchema import PropertyResponse, PropertyCreate
-from app.services.propertyService import update_property, search_property, get_all_properties, create_property, create_properties, search_properties_with_ai
+from app.services.propertyService import update_property,get_user_properties, search_property, get_all_properties, create_property, create_properties, search_properties_with_ai
 from app.utils.jwt_handler import get_current_user
 from app.models.properties import Property
 from app.models.users import Users
@@ -27,7 +27,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 # Creating single property
 @router.post("/", response_model=PropertyCreate, status_code=status.HTTP_201_CREATED)
-async def create_new_property(property: PropertyCreate, db: AsyncSession = Depends(get_db),
+async def create_new_property(property: PropertyCreate, db: db_dependency,
 current_user: Users = Depends(get_current_user)):
     return await create_property(db,property, current_user)
     
@@ -41,7 +41,11 @@ def create_new_properties(properties: List[PropertyCreate], db: Session = Depend
 async def list_properties(db: db_dependency):
     return await get_all_properties(db)
 
-# @router.post("/sel_properties(db)
+#get all properties of selected user
+@router.get("/my-properties", response_model=list[PropertyCreate])
+async def list_user_properties(
+    db: db_dependency ,current_user: Users = Depends(get_current_user),):
+    return await get_user_properties(db, current_user)
 
 
 # Search for properties/")

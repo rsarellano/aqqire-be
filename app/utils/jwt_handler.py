@@ -6,6 +6,10 @@ from fastapi import Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from app.connection.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.users import Users
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import select
 
 
 secret_key = os.getenv("SECRET_KEY")
@@ -64,6 +68,17 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
     if user_id is None:
         raise HTTPException(status_code=401, detail="Invalid Token")
     
-    user = await db.get(Users, int(user_id))
+    
+    try:
+        uuid_user_id = UUID(user_id)
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid Token")
+    
+    result =await db.execute(select(Users).where(Users.id == user_id))
+    user = result.scalar_one_or_none()
+    
+    
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
+    
+    return user

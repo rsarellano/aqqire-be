@@ -1,4 +1,6 @@
 from pydantic import BaseModel,EmailStr
+from uuid import UUID
+from typing import Optional
 
 class UserBase(BaseModel):
     user_email: str
@@ -15,7 +17,7 @@ class UserLogin(BaseModel):
     user_passwrd: str
 
 class UserResponse(UserBase):
-    id: int
+    id: UUID
 
     class config:
         orm_mode=True
